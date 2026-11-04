@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#1f5f46" />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <title>임직식 사진 앨범</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="photos.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#gallery">사진 목록으로 바로가기</a>
+
+    <header class="hero">
+      <div class="hero__inner">
+        <p class="eyebrow">PHOTO ALBUM</p>
+        <h1>임직식 사진 앨범</h1>
+        <p class="hero__description">
+          사진을 누르면 크게 볼 수 있습니다.<br />
+          크게 본 뒤 <strong>사진 저장하기</strong>를 눌러주세요.
+        </p>
+
+        <div class="hero__actions">
+          <a class="button button--primary" href="#gallery">사진 둘러보기</a>
+          <a id="downloadAllButton" class="button button--secondary is-hidden" href="#">
+            전체 사진 한 번에 받기
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="gallery" class="gallery-section" aria-labelledby="galleryTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">GALLERY</p>
+            <h2 id="galleryTitle">사진 고르기</h2>
+          </div>
+          <p id="photoStatus" class="photo-status" aria-live="polite"></p>
+        </div>
+
+        <div id="photoGrid" class="photo-grid" aria-label="사진 목록"></div>
+
+        <div class="load-more-wrap">
+          <button id="loadMoreButton" class="button button--primary button--wide" type="button">
+            사진 더 보기
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <button id="backToTop" class="back-to-top" type="button" aria-label="맨 위로 이동">
+      ↑ 위로
+    </button>
+
+    <div id="viewer" class="viewer" hidden role="dialog" aria-modal="true" aria-labelledby="viewerTitle">
+      <div class="viewer__backdrop" data-close-viewer></div>
+      <div class="viewer__panel">
+        <div class="viewer__topbar">
+          <h2 id="viewerTitle">사진 크게 보기</h2>
+          <button class="viewer__close" type="button" data-close-viewer aria-label="사진 닫기">닫기 ×</button>
+        </div>
+
+        <div class="viewer__image-wrap">
+          <button id="previousPhoto" class="viewer__nav viewer__nav--previous" type="button" aria-label="이전 사진">
+            ‹
+          </button>
+          <img id="viewerImage" alt="" />
+          <button id="nextPhoto" class="viewer__nav viewer__nav--next" type="button" aria-label="다음 사진">
+            ›
+          </button>
+        </div>
+
+        <p id="viewerCount" class="viewer__count"></p>
+        <button id="savePhotoButton" class="button button--download button--wide" type="button">
+          이 사진 휴대폰에 저장
+        </button>
+        <p id="saveHelp" class="save-help"></p>
+      </div>
+    </div>
+  </body>
+</html>
