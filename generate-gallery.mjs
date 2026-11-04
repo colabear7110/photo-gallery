@@ -50,7 +50,7 @@ for (const [index, filename] of files.entries()) {
 
 writeFileSync(
   join(root, "photos.js"),
-  `window.PHOTO_FILES = ${JSON.stringify(files, null, 2)};\n`,
+  `window.PHOTO_FILES = ${JSON.stringify(files.map((filename) => filename.normalize("NFC")), null, 2)};\n`,
   "utf8",
 );
 
