@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#1f5f46" />
     <meta name="robots" content="noindex,nofollow,noarchive" />
-    <title>임직식 사진 앨범</title>
-    <link rel="stylesheet" href="styles.css?v=3" />
-    <script src="photos.js?v=3" defer></script>
-    <script src="app.js?v=3" defer></script>
+    <title>임직 행사 사진 앨범</title>
+    <link rel="stylesheet" href="styles.css?v=4" />
+    <script src="photos.js?v=4" defer></script>
+    <script src="app.js?v=4" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#gallery">사진 목록으로 바로가기</a>
@@ -16,7 +16,7 @@
     <header class="hero">
       <div class="hero__inner">
         <p class="eyebrow">PHOTO ALBUM</p>
-        <h1>임직식 사진 앨범</h1>
+        <h1>임직 행사 사진 앨범</h1>
         <p class="hero__description">
           사진을 누르면 크게 볼 수 있습니다.<br />
           크게 본 뒤 <strong>사진 저장하기</strong>를 눌러주세요.
@@ -33,10 +33,34 @@
 
     <main>
       <section id="gallery" class="gallery-section" aria-labelledby="galleryTitle">
+        <div class="album-picker" aria-label="행사 선택">
+          <p class="album-picker__guide">보고 싶은 행사를 선택해 주세요</p>
+          <div class="album-picker__buttons">
+            <button
+              class="album-button is-active"
+              type="button"
+              data-album="retreat"
+              aria-pressed="true"
+            >
+              <span class="album-button__title">임직자 수련회</span>
+              <span class="album-button__count" data-album-count="retreat"></span>
+            </button>
+            <button
+              class="album-button"
+              type="button"
+              data-album="worship"
+              aria-pressed="false"
+            >
+              <span class="album-button__title">임직감사예배</span>
+              <span class="album-button__count" data-album-count="worship"></span>
+            </button>
+          </div>
+        </div>
+
         <div class="section-heading">
           <div>
             <p class="eyebrow">GALLERY</p>
-            <h2 id="galleryTitle">사진 고르기</h2>
+            <h2 id="galleryTitle">임직자 수련회 사진</h2>
           </div>
           <p id="photoStatus" class="photo-status" aria-live="polite"></p>
         </div>

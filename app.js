@@ -3,10 +3,24 @@
 
   const PAGE_SIZE = 48;
   const DOWNLOAD_ALL_URL = "";
-  const files = Array.isArray(window.PHOTO_FILES) ? window.PHOTO_FILES : [];
+  const allFiles = Array.isArray(window.PHOTO_FILES) ? window.PHOTO_FILES : [];
+  const albums = [
+    {
+      id: "retreat",
+      label: "임직자 수련회",
+      files: allFiles.filter((filename) => filename.startsWith("업로드용-")),
+    },
+    {
+      id: "worship",
+      label: "임직감사예배",
+      files: allFiles.filter((filename) => !filename.startsWith("업로드용-")),
+    },
+  ];
 
   const grid = document.querySelector("#photoGrid");
   const status = document.querySelector("#photoStatus");
+  const galleryTitle = document.querySelector("#galleryTitle");
+  const albumButtons = [...document.querySelectorAll("[data-album]")];
   const loadMoreButton = document.querySelector("#loadMoreButton");
   const downloadAllButton = document.querySelector("#downloadAllButton");
   const viewer = document.querySelector("#viewer");
@@ -17,7 +31,10 @@
   const previousPhoto = document.querySelector("#previousPhoto");
   const nextPhoto = document.querySelector("#nextPhoto");
   const backToTop = document.querySelector("#backToTop");
+  const viewerTitle = document.querySelector("#viewerTitle");
 
+  let activeAlbum = albums[0];
+  let files = activeAlbum.files;
   let renderedCount = 0;
   let currentIndex = 0;
   let previouslyFocused = null;
@@ -31,7 +48,7 @@
   }
 
   function setStatus() {
-    status.textContent = `전체 ${files.length.toLocaleString("ko-KR")}장 중 ${renderedCount.toLocaleString("ko-KR")}장 표시`;
+    status.textContent = `${activeAlbum.label} ${files.length.toLocaleString("ko-KR")}장 중 ${renderedCount.toLocaleString("ko-KR")}장 표시`;
     loadMoreButton.classList.toggle("is-hidden", renderedCount >= files.length);
   }
 
@@ -42,11 +59,11 @@
 
     button.type = "button";
     button.className = "photo-card";
-    button.setAttribute("aria-label", `사진 ${index + 1} 크게 보기`);
+    button.setAttribute("aria-label", `${activeAlbum.label} 사진 ${index + 1} 크게 보기`);
     button.addEventListener("click", () => openViewer(index));
 
     image.src = fileUrl("thumbnails", filename);
-    image.alt = `사진 ${index + 1}`;
+    image.alt = `${activeAlbum.label} 사진 ${index + 1}`;
     image.loading = "lazy";
     image.decoding = "async";
 
@@ -73,7 +90,8 @@
   function updateViewer() {
     const filename = files[currentIndex];
     viewerImage.src = fileUrl("photos", filename);
-    viewerImage.alt = `사진 ${currentIndex + 1}`;
+    viewerImage.alt = `${activeAlbum.label} 사진 ${currentIndex + 1}`;
+    viewerTitle.textContent = `${activeAlbum.label} 사진`;
     viewerCount.textContent = `${currentIndex + 1} / ${files.length}`;
     previousPhoto.disabled = files.length <= 1;
     nextPhoto.disabled = files.length <= 1;
@@ -103,6 +121,32 @@
   function showNext() {
     currentIndex = (currentIndex + 1) % files.length;
     updateViewer();
+  }
+
+  function selectAlbum(albumId) {
+    const selectedAlbum = albums.find((album) => album.id === albumId);
+    if (!selectedAlbum || selectedAlbum === activeAlbum) return;
+
+    activeAlbum = selectedAlbum;
+    files = activeAlbum.files;
+    renderedCount = 0;
+    currentIndex = 0;
+    grid.replaceChildren();
+    galleryTitle.textContent = `${activeAlbum.label} 사진`;
+
+    albumButtons.forEach((button) => {
+      const isActive = button.dataset.album === activeAlbum.id;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+    });
+
+    if (files.length === 0) {
+      status.textContent = `${activeAlbum.label} 사진을 준비하지 못했습니다.`;
+      loadMoreButton.classList.add("is-hidden");
+      return;
+    }
+
+    renderNextPage();
   }
 
   async function saveCurrentPhoto() {
@@ -154,6 +198,9 @@
   }
 
   loadMoreButton.addEventListener("click", renderNextPage);
+  albumButtons.forEach((button) => {
+    button.addEventListener("click", () => selectAlbum(button.dataset.album));
+  });
   previousPhoto.addEventListener("click", showPrevious);
   nextPhoto.addEventListener("click", showNext);
   savePhotoButton.addEventListener("click", saveCurrentPhoto);
@@ -175,7 +222,12 @@
     { passive: true },
   );
 
-  if (files.length === 0) {
+  albums.forEach((album) => {
+    const count = document.querySelector(`[data-album-count="${album.id}"]`);
+    if (count) count.textContent = `${album.files.length.toLocaleString("ko-KR")}장`;
+  });
+
+  if (allFiles.length === 0 || files.length === 0) {
     status.textContent = "사진 목록을 준비하지 못했습니다.";
     loadMoreButton.classList.add("is-hidden");
     return;
